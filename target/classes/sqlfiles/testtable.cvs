@@ -1,0 +1,142 @@
+create database bstory;
+show databases;
+
+create user 'bstory'@localhost identified by '1234';
+grant all privileges on bstory.* to 'bstory'@localhost;
+commit;
+
+
+create table bs_userInfo (
+	bs_userSeq int(11) auto_increment,
+	bs_userEmail varchar(150) not null,
+	bs_userName varchar(100) not null,
+	bs_userPassword varchar(100) not null,
+	bs_userAddress varchar(250),
+	bs_userPhone int(11) zerofill,
+	bs_userAccountNumber varchar(100),
+	regDate date,
+	bs_userDeleteflag char(1),
+    primary key(bs_userSeq)
+);
+
+commit;
+
+INSERT INTO bs_userInfo(
+			bs_userSeq,
+			bs_userEmail,
+			bs_userName,
+			bs_userPassword,
+			bs_userAddress,
+			bs_userPhone,
+			bs_userAccountNumber,
+			regDate,
+			bs_userDeleteflag
+		)
+		VALUES (
+			bs_userSeq ,
+			'kias0301@naver.com',
+			'홍길동',
+			'1234',
+			'',
+			01012341234,
+			'',
+			now(),
+			'N'
+		);
+        
+commit;
+
+select * from bs_userInfo;
+        
+        
+        SELECT
+		 	count(*)
+		 FROM bs_userInfo
+		 WHERE 1=1
+		 and bs_userEmail = 'syas0301@naver.com'
+		 and bs_userPassword = '1234';
+         
+         
+		SELECT 
+			  brd_seq
+			, brd_title
+			, brd_writer
+			, brd_memo
+			, DATE_FORMAT(req_date,'%Y-%m-%d') req_date
+			, brd_hit
+			, brddeleteflag
+		FROM sampleboard
+		WHERE brddeleteflag = 'N'
+        order by brd_seq desc;
+		
+        
+create table sampleboard(
+	brd_seq int auto_increment,
+    brd_title varchar(150),
+    brd_writer varchar(100),
+    brd_memo varchar(4000),
+    req_date date,
+    brd_hit int,
+    brddeleteflag char(1),
+    primary key(brd_seq)
+);
+
+insert into sampleboard values(1, '테스트', '홍길동', '아 퇴근하고싶다.', now(), 1, 'N');
+
+commit;
+
+select * from sampleboard;
+
+
+SELECT 
+			  brd_seq
+			, brd_title
+			, brd_writer
+			, brd_memo
+			, DATE_FORMAT(req_date,'%Y-%m-%d') req_date
+			, brd_hit
+			, brddeleteflag
+		FROM sampleboard
+		WHERE brd_seq = 4;
+        
+        
+UPDATE sampleboard SET
+		 	brd_title = '변경됨?',
+			brd_memo = '변경',
+			req_date = now() 
+		where brd_seq = 6;
+        
+        
+UPDATE sampleboard SET
+			brd_hit = brd_hit + 1
+		WHERE brd_seq = 9;
+        
+        
+create table sampleboard_file(
+	file_no int(11) not null auto_increment, -- 파일번호
+    brd_seq int(11), 						 -- 글번호
+    file_name varchar(100), 					-- 파일명
+    real_name varchar(30), 					-- 실제파일명
+    file_size int, 							-- 파일크기
+    primary key(file_no)
+);
+
+commit;
+
+
+CREATE TABLE TB_FILE
+(
+  IDX   int(11) auto_increment,
+  BOARD_IDX int(11) NOT NULL,
+  ORIGINAL_FILE_NAME VARCHAR(260) NOT NULL,
+  STORED_FILE_NAME VARCHAR(36) NOT NULL,
+  FILE_SIZE int,
+  CREA_DTM  DATE NOT NULL,
+  CREA_ID   VARCHAR(30) NOT NULL,
+  DEL_GB    VARCHAR(1) DEFAULT 'N' NOT NULL,
+  PRIMARY KEY (IDX)
+);
+
+commit;
+
+

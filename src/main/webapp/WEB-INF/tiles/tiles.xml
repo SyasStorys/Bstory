@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+ 
+<tiles-definitions>
+ 
+    <!-- (1) 메인 화면 (메인 레이아웃 적용)-->    
+    <definition name="main" template="/WEB-INF/tiles/layout/defaultLayOut.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="header" value="/WEB-INF/tiles/templates/main/header.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/templates/main/footer.jsp" />
+    </definition>
+    
+    <!-- (2) 로그인/회원가입 화면 (메인 레이아웃 적용)-->
+    <definition name="user" template="/WEB-INF/tiles/layout/userLayOut.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="header" value="/WEB-INF/tiles/templates/user/header.jsp" />
+    </definition>
+ 
+ 	<!-- (3) 샘플 게시판 -->
+    <definition name="board" template="/WEB-INF/tiles/layout/boardLayOut.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="header" value="/WEB-INF/tiles/templates/board/header.jsp" />
+        <!-- <put-attribute name="footer" value="/WEB-INF/tiles/templates/board/footer.jsp" /> -->
+    </definition>
+ 
+    
+    <!-- (1) -->    
+    <definition name="main/*" extends="main">
+      <put-attribute name="body" value="/WEB-INF/views/main/{1}.jsp" />
+    </definition>
+    
+    <definition name="main/*/*" extends="main">
+      <put-attribute name="body" value="/WEB-INF/views/main/{1}/{2}.jsp" />
+    </definition>
+    
+    <!-- (2) -->    
+    <definition name="user/*" extends="user">
+      <put-attribute name="body" value="/WEB-INF/views/user/{1}.jsp" />
+    </definition>
+    
+    <!-- (3) -->    
+    <definition name="sample/board/*" extends="board">
+      <put-attribute name="body" value="/WEB-INF/views/sample/board/{1}.jsp" />
+    </definition>
+    
+    
+</tiles-definitions>

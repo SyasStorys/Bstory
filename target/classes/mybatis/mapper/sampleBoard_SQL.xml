@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sampleBoard">
+
+	<sql id="includeBoard">
+		WHERE brddeleteflag = 'N'
+		<if test="searchKeyword !=null and searchKeyword != ''">
+			<foreach item="item" index="index" collection="searchTypeArr">
+				AND ${item} LIKE CONCAT('%', #{searchKeyword}, '%')
+			</foreach>
+		</if>
+	</sql>
+
+	<select id="selectSampleBoardList" parameterType="kr.bstory.board.common.SearchVO" resultType="java.util.Map">
+		SELECT 
+			  brd_seq
+			, brd_title
+			, brd_writer
+			, brd_memo
+			, DATE_FORMAT(req_date,'%Y-%m-%d') req_date
+			, brd_hit
+			, brddeleteflag
+		FROM sampleboard
+		<include refid="includeBoard" />
+        ORDER BY brd_seq DESC
+        LIMIT ${rowStart-1}, 10
+		
+	</select>
+	
+	<select id="selectSampleBoardListCnt" resultType="Integer" parameterType="kr.bstory.board.common.SearchVO">
+		SELECT COUNT(*)
+			FROM sampleboard
+		<include refid="includeBoard" />
+	</select>
+	
+	<update id="selectSampleBoardCnt" parameterType="java.util.Map">
+		UPDATE sampleboard SET
+			brd_hit = brd_hit + 1
+		WHERE brd_seq = #{brd_seq};
+	</update>
+	
+	<select id="selectSampleBoardRead" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			  brd_seq
+			, brd_title
+			, brd_writer
+			, brd_memo
+			, DATE_FORMAT(req_date,'%Y-%m-%d') req_date
+			, brd_hit
+			, brddeleteflag
+		FROM sampleboard
+		WHERE brd_seq = #{brd_seq} 
+	</select>
+	
+	<insert id="sampleBoardInsert" parameterType="java.util.Map">
+	
+	   <selectKey resultType="String" keyProperty="brd_seq" order="BEFORE">
+            SELECT IFNULL(MAX(brd_seq),0)+1 FROM sampleboard
+       </selectKey> 
+	
+		INSERT INTO sampleboard 
+		(
+			brd_seq
+			, brd_title
+			, brd_writer
+			, brd_memo
+			, req_date
+			, brd_hit
+			, brddeleteflag
+		)
+		VALUES
+		(
+			#{brd_seq}
+			, #{brd_title}
+			, #{brd_writer}
+			, #{brd_memo}
+			, now()
+			, 0
+			, 'N'
+		)
+	</insert>
+	
+	<update id="sampleBoardUpdate" parameterType="java.util.Map">
+		
+		UPDATE sampleboard SET
+		 	brd_title = #{brd_title},
+			brd_memo = #{brd_memo},
+			req_date = now()
+		WHERE brd_seq = #{brd_seq}
+	</update>
+	
+	<update id="sampleBoardDelete" parameterType="java.util.Map">
+		
+		UPDATE sampleboard SET
+		 	brddeleteflag = 'Y'
+		WHERE brd_seq = #{brd_seq}
+	</update>
+	
+	<insert id="sampleBoardInsertFile" parameterType="kr.bstory.board.common.FileVO">
+		INSERT INTO sampleboard_file
+		(
+			brd_seq,
+			file_name,
+			real_name,
+			file_size
+		)
+		VALUES
+		(
+			#{parentPK}
+			,#{file_name}
+			,#{real_name}
+			,#{file_size}
+		)
+	</insert>
+	
+	
+</mapper>

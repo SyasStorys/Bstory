@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userVO">
+	<select id="selectUserLoginCheck" parameterType="userVO" resultType="int">
+		 SELECT
+		 	count(*)
+		 FROM bs_userInfo
+		 WHERE 1=1
+		 and bs_userEmail = #{bs_userEmail}
+		 and bs_userPassword = #{bs_userPassword}
+	</select>
+	
+	<insert id="userSignUp" parameterType="userVO">
+		
+		INSERT INTO bs_userInfo
+		(	
+			bs_userNumber,
+			bs_userEmail,
+			bs_userName,
+			bs_userPassword,
+			bs_userAddress,
+			bs_userPhone,
+			bs_userAccountNumber,
+			regDate,
+			bs_userDeleteflag
+		)
+		VALUES (
+			bs_userNumber ,
+			#{bs_userEmail},
+			#{bs_userName},
+			#{bs_userPassword},
+			#{bs_userAddress},
+			${bs_userPhone},
+			#{bs_userAccountNumber},
+			now(),
+			'N'
+		)
+		
+	</insert>
+
+</mapper>
